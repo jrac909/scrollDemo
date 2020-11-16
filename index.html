@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>scroll list demo</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			background-color: #020726;
+		}
+		#scroll-wrap {
+			width: 500px;
+			height: 500px;
+    		position: absolute;
+    		left: 0;
+    		right: 0;
+    		top: 0;
+    		bottom: 0;
+    		margin: auto;
+    		overflow: hidden;
+		}
+		/* 滚动项 */
+		.scroll-item {
+		    width: calc(100% - 2px);
+		    height: 115px;
+		    line-height: 115px;
+		    position: relative;
+		    top: 0;
+		    border: 1px solid rgba(0, 72,167, 0.8);
+		    box-shadow: 0 0 8px rgba(0, 72,167, 0.8) inset;
+		    margin-bottom: 8px;
+		    color: #FFF;
+		    display: flex;
+		    justify-content: center;
+		}
+	</style>
+</head>
+<body>
+	<!-- 滚动容器: 滚动可见范围 -->
+	<div id="scroll-wrap"></div>
+</body>
+</html>
+<script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	// 模拟数据
+	let dataList = [
+		{ name: '张一山' },{ name: '王晓义' },{ name: '李光洁' },{ name: '张雨绮' },{ name: '陈乔恩' },{ name: '何炅' },{ name: '谢娜' },{ name: '蔡徐坤' },{ name: '王紫娇' },{ name: '刘思彤' },{ name: '吴昕' },{ name: '维嘉' },{ name: '杜海涛' },{ name: '杨幂' },{ name: '刘诗诗' },{ name: '汪涵' },{ name: '杨迪' },{ name: '杨洋' },{ name: '虞书欣' },{ name: '杨超越' }
+	];
+	// 计算第一次渲染条数:显示条数（>=4渲染四条，否则全部渲染完）
+    let len = dataList.length >= 4?4:dataList.length;
+    // 获取父容器
+    let $parent = $('#scroll-wrap');
+    // 先清空容器内内容
+    $parent.empty();
+    // 遍历添加默认滚动项
+    for (let i=0; i<len; i++) {
+	    $parent.append(`
+	        <div class="scroll-item">
+	            <div class="part1-top-item-name">${ dataList[i].name }</div>
+	        </div>`);
+    };
+    // 去掉前面已经渲染的内容
+    dataList = dataList.slice(len);
+    // 创建定时器
+    let timer = null;
+    let isFirst = false;
+    timer = setInterval(function() {
+        if (dataList.length > 0) {
+            let item = dataList.shift();
+            $parent.append(`
+	        <div class="scroll-item">
+	            <div class="part1-top-item-name">${ item.name }</div>
+	        </div>`);
+	        // 位置重置为0
+            $('.scroll-item').css({ top: 0 });
+            
+            if (isFirst){
+                $('.scroll-item').first().remove();
+            }
+        }
+        $('.scroll-item').animate({
+            top: "-123px"
+        }, 500);
+        isFirst=true;
+    }, 2000);
+</script>
